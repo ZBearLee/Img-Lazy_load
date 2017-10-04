@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>延迟加载图片</title>
+</head>
+
+<body>
+    <img src="http://placehold.it/770x180/FE244A/ffffff" origin-src="http://static.66cn.com/upload/20170725/1500958094335355.jpg"
+        alt="春风十里不如你" id="big_img"> 延迟加载图片，就是解决首屏快速加载出来，网页打开速度， 在加载html的时候，会去解析Img，img会通过src去触发httpp的请求下载
+    <script>
+        //window.onload事件会后于document.ready事件执行
+        window.onload = function () {
+            //网页已打开
+            var MyImage = (function () {
+                //手动下载图片，形成闭合的空间，动态构造
+                //使img.src=url
+                // big_img=url就可以显示正常图片了
+                //img 是临时的演员，它本身并没有什么用，所以放入到闭包中，形成闭合的空间，就不会影响外界了
+                // var imgNode = document.createElement('img')
+                // imgNode.style.display = 'none'
+                // document.body.appendChild(imgNode)
+
+                var img = new Image()
+                return {
+                    //return回json对象
+                    setSrc: function (url, ele) {
+                        img.onload = function () {
+                            console.log('图片加载完成')
+                            ele.src = url
+                        }
+                        img.src = url
+                    }
+                }
+            })()
+            var bigPic = document.getElementById('big_img')
+            imgSrc = bigPic.getAttribute('origin-src')
+            MyImage.setSrc(imgSrc, bigPic)
+        }
+    </script>
+</body>
+
+</html>
